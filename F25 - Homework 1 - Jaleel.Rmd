@@ -1,0 +1,172 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+library(tinytex)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+```
+
+
+
+
+# Part 1
+```{r}
+# (a) Read file Su_raw_matrix.txt into data frame su
+su <- read.delim("su_raw_matrix.txt")
+
+# (b) Find the mean of Liver_2.CEL in data frame su by Column Index
+mean(su[,8])
+
+# (b) Find the mean of Liver_2.CEL in data frame su by Column Name
+mean(su$Liver_2.CEL)
+
+# (b) Find the sd of Liver_2.CEL in data frame su by Column Index
+sd(su[,8])
+
+# (b) Find the sd of Liver_2.CEL in data frame su by Column Name
+sd(su$Liver_2.CEL)
+
+# (c) Find the average of each colum
+colMeans(su)
+
+# (c) Find the sum of each colum
+colSums(su)
+```
+
+
+
+
+
+
+
+# Part 2
+```{r}
+# (2a) Generate 10000 numbers, mean=0, sigma=0.2
+hista <- rnorm(10000, mean = 0, sd = 0.2)
+hist(hista, xlim = c(-5,5))
+
+# (2b) Generate 10000 numbers, mean=0, sigma=0.5
+histb <- rnorm(10000, mean = 0, sd = 0.5)
+hist(histb, xlim = c(-5,5))
+```
+
+
+
+
+
+# Part 3
+```{r}
+dat <- data.frame(cond = factor(rep(c("A","B"), each=200)),
+rating = c(rnorm(200),rnorm(200, mean=.8)))
+
+# Overlaid histograms
+ggplot(dat, aes(x=rating, fill=cond)) +
+geom_histogram(binwidth=.5, alpha=.5, position="identity")
+
+# Interleaved histograms
+ggplot(dat, aes(x=rating, fill=cond)) + geom_histogram(binwidth=.5, position="dodge")
+
+# Density plots
+ggplot(dat, aes(x=rating, colour=cond)) + geom_density()
+
+# Density plots with semitransparent fill
+ggplot(dat, aes(x=rating, fill=cond)) + geom_density(alpha=.3)
+
+
+
+
+
+```
+
+
+# Part 3(f)
+```{r}
+# (3f) Read ”diabetes_train.csv” into a variable called diabetes
+diabetes <- read.csv("diabetes_train.csv")
+
+# Overlaid histograms
+ggplot(diabetes, aes(x=mass, fill=class)) +
+geom_histogram(binwidth=.5, alpha=.5, position="identity")
+
+# Interleaved histograms
+ggplot(diabetes, aes(x=mass, fill=class)) + geom_histogram(binwidth=.5, position="dodge")
+
+# Density plots
+ggplot(diabetes, aes(x=mass, colour=class)) + geom_density()
+
+# Density plots with semitransparent fill
+ggplot(diabetes, aes(x=mass, fill=class)) + geom_density(alpha=.3)
+```
+
+# Part 4
+```{r}
+
+# Read ”titanic.csv” into a variable called diabetes
+passengers <- read.csv("titanic.csv")
+
+#Remove rows with incomplete data; row count goes from 891 to 577
+#Summarizes the data based on the column data types and content
+passengers %>% drop_na() %>% summary()
+
+#Filter for only the male passengers
+passengers %>% filter(Sex == "male")
+
+#Sorts the data from highest to lowest Fare
+passengers %>% arrange(desc(Fare))
+
+#Creates a new column which is equal to Parch plus SibSp in each row. It adds parents, children, siblings, and spouses
+passengers %>% mutate(FamSize = Parch + SibSp)
+
+#Groups the rows in the passengers data frame by Sex
+#Creates a summary view of the data based on Sex; It has 2 rows and 3 columns, showing the average fair of each sex and the number of each sex who survived
+passengers %>% group_by(Sex) %>% summarise(meanFare = mean(Fare), numSurv = sum(Survived))
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+# Part 5
+```{r}
+
+# Create a variable for the skin attribute in the diabetes data frame
+skinPercentile <- diabetes$skin
+
+# Calculate the 10th, 30th, 50th, and 60th percentiles of the skin attribute of the diabetes data
+quantile(skinPercentile, c(0.10, 0.30, 0.50, 0.60))
+
+
+
+```
+
+
