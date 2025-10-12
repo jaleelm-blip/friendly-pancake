@@ -1,0 +1,99 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tinytex)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+```
+
+
+# Q2-1
+# Manhattan Distance = |x2 - x1| + |y2 - y1| + |z2 - z1|
+
+```{r}
+
+manhattanDistance <- function (v1, v2)
+{
+  md = abs(v1 - v2)
+  sum(md)
+}
+
+v1 <- c(5, 7, 7, 2)
+v2 <- c(6, 3, 9, 9)
+
+manhattanDistance(v1, v2)
+
+
+
+```
+
+# Q2-2
+# Euclidean Distance = √((x2 - x1)^2 + (y2 -y1)^2 + (z2 - z1)^2)
+
+```{r}
+
+euclideanDistance <- function (v4, v5)
+{
+  sum(sqrt((v5 - v4)^2))
+}
+
+v4 <- c(5, 7, 7, 2)
+v5 <- c(6, 3, 9, 9)
+
+euclideanDistance(v4, v5)
+```
+
+
+# Q4: - mtcars
+
+```{r}
+
+df = mtcars
+
+cor(df$mpg, df$wt)
+
+ggplot(df, aes(x=wt, y=mpg, color=hp)) + 
+geom_point(size=2) + xlab("mtcars$wt") + ylab("mtcars$mpg")
+```
+
+# Q5: Drop/Remove Columns with more than 75% missing Values
+```{r}
+
+# Read ”metabolite.csv” into a variable called metabolite
+metabolite <- read.csv("metabolite.csv")
+
+# Select only columns that are numeric
+metaboliteNumOnly <- metabolite %>% select(where(is.numeric))
+
+# Select only columns that have means less than 75%
+metaboliteNA75 <- metaboliteNumOnly %>% select_if(colMeans(is.na(.)) < 0.75)
+
+# Drop columns which have more than 75% missing values
+metaboliteDropped <- metaboliteNA75 %>% drop_na()
+
+
+
+```
+
+# Q6: Please apply PCA on the processed metabolites data and create a scatter plot by using first two principal components
+```{r}
+
+metaboliteDroppedPCA = princomp(metaboliteDropped[, 1:2])
+metaboliteDroppedPCA_df = as.data.frame(metaboliteDroppedPCA$scores)
+
+metaboliteDropped_after_pca<-ggplot(data=metaboliteDroppedPCA_df, aes(x=metaboliteDroppedPCA_df[,1], y=metaboliteDroppedPCA_df[, 2], color=metaboliteDroppedPCA_df[1,2])) + geom_point() +
+  xlab("Pro") + ylab("Phe") + theme(legend.title = element_blank())
+show(metaboliteDropped_after_pca)
+
+```
+
+
+
+
+
