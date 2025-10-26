@@ -1,0 +1,147 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tinytex)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+```
+
+# Q1 Suppose that we have age data including the following numbers in sorted order.
+# age: 13, 15, 16, 16, 19, 20, 20, 21, 22, 22, 25, 25, 25, 25, 30, 33, 33, 35, 35, # 35, 35, 36, 40, 45, 46, 52, 70
+
+# (a)
+# Use smoothing by bin means to smooth the above data, using a bin depth of 3
+
+```{r}
+
+age_data_df = c(13, 15, 16, 16, 19, 20, 20, 21, 22, 22, 25, 25, 25, 25, 30, 33, 33, 35, 35, 35, 35, 36, 40, 45, 46, 52, 70)
+
+bin_depth = 3
+
+age_data_bin = split(age_data_df,ceiling(seq_along(age_data_df) / bin_depth))
+
+
+
+mean_age_data_bin1 = sapply(age_data_bin[1], mean)
+mean_age_data_bin2 = sapply(age_data_bin[2], mean)
+mean_age_data_bin3 = sapply(age_data_bin[3], mean)
+mean_age_data_bin4 = sapply(age_data_bin[4], mean)
+mean_age_data_bin5 = sapply(age_data_bin[5], mean)
+mean_age_data_bin6 = sapply(age_data_bin[6], mean)
+mean_age_data_bin7 = sapply(age_data_bin[7], mean)
+mean_age_data_bin8 = sapply(age_data_bin[8], mean)
+mean_age_data_bin9 = sapply(age_data_bin[9], mean)
+```
+
+# (b)
+# Use IQR measure to determine if there are any outliers in this data
+
+```{r}
+age_data_median = median(age_data_df)
+age_data_median_Q1 = median(age_data_df[1:14])
+age_data_median_Q3 = median(age_data_df[15:27])
+age_data_IRQ = age_data_median_Q3 - age_data_median_Q1
+
+age_data_upper = age_data_median_Q3 + (1.5 * age_data_IRQ)
+age_data_lower = age_data_median_Q1 - (1.5 * age_data_IRQ)
+
+age_data_outliers = age_data_df[age_data_df > 56.5]
+age_data_outliers
+
+
+```
+
+# (c)
+# Use min-max normalization to transform the value 35 for age onto the range [0.0, 1.0].
+
+# v2 = ((v - minA) / (maxA - minA)) (new_maxA - new_minA) + new_minA
+
+```{r}
+
+v = 35
+minA = 13
+maxA = 70
+new_minA = 0.0
+new_maxA = 1.0
+
+v2 = ((v - minA) / (maxA - minA)) * (new_maxA - new_minA) + new_minA
+v2
+
+
+
+```
+
+# (d)
+# Use z-score normalization to transform the value 35 for age? (you need to compute mean and standard deviation first)
+
+# v_z_score = (v - mean) / standard deviation
+
+
+```{r}
+
+mean_age_data = mean(age_data_df)
+sd_age_data = sd(age_data_df)
+
+v_z_score = (v - mean_age_data) / sd_age_data
+v_z_score
+
+```
+# (e)
+# Use normalization by decimal scaling to transform the value 35 for age
+
+# v' = v / 10j where Where j is the smallest integer such that Max(|ν’|) < 1
+
+
+```{r}
+age_data_df_one_tenth = age_data_df / 10
+age_data_df_one_hundreth = age_data_df / 100
+
+v_dec_scale = v / (10^2)
+v_dec_scale
+
+
+
+```
+
+
+
+# Q2. Write a function in your preferred language which can take a data vector and do min-max normalization by transforming
+# data onto a desired range. For example, it should be able get the age data above and map it between any two numbers.
+# (foo (a, min_new, max_new) where a is an one-dimensional array)
+
+
+```{r}
+min_age = min(age_data_df)
+max_age = max(age_data_df)
+
+
+min_max_norm <- function(a, min_new, max_new)
+{
+
+  ((a - min_age) / (max_age - min_age)) * (max_new - min_new) + min_new
+
+}
+
+min_max_norm(35, 0.0, 1.0)
+min_max_norm(age_data_df[9], 0.0, 1.0)
+min_max_norm(age_data_df[9], 0.3, 2.0)
+min_max_norm(age_data_df[15], 0.0, 1.0)
+```
+
+# Using information gain on the data in Table 1, do calculations for two levels of a decision tree which decides whether
+# a person is senior or junior. 
+
+```{r}
+
+
+
+
+```
+
+
